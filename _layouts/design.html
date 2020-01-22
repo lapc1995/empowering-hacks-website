@@ -1,0 +1,307 @@
+---
+
+---
+{% assign handles = site.handles | where: "design", page.name %}
+{% assign family = site.designs | where: "family", page.family %}
+{% assign sameFamily = family | where_exp:"item","item.name != page.name" %}
+
+<!DOCTYPE html>
+<html-- lang="en">
+<head>
+	<title>{{ site.author }} / {{ page.project.title }}</title>
+	<meta name="author" content="{{ site.author }}">
+	<meta name="description" content="{{ page.content | strip_html | strip_newlines }}">
+	<meta name="keywords" content="{{ page.meta.keywords }}">
+	{% include head.html %}
+
+<style>
+
+	.grid-container {
+		display: grid;
+		grid-template-columns: auto auto auto auto;
+		grid-gap: 5px;
+		background-color: white;
+		padding: 5px;
+		align-content: center;
+	}
+
+	.sizeHeader {
+		grid-column-start: 1;
+		grid-column-end: 3;
+		text-align: start;
+	}
+
+	.fileCell {
+		outline-style: groove;
+		outline-width: 1px;
+		text-align: center;
+	}
+
+	.fileCell:hover {
+		background-color: black;
+		font: white;
+		cursor: pointer;
+	}
+
+	.fileCellNoFile {
+		background-color: lightgrey;
+		text-align: center;
+	}
+
+	.fileText {
+		position: relative;
+		top: 7px;
+		font-weight: 900;
+	}
+
+	.fileDownloadButton {
+		width: max-content;
+		height: auto;
+	}
+
+	.grid-container-similar {
+		display: grid;
+		grid-template-columns: auto auto auto;
+		grid-gap: 5px;
+		background-color: white;
+		padding: 5px;
+		align-content: center;
+	}
+
+	.similar-cell {
+		max-width: 150px;
+	}
+
+	.similar-cell:hover {
+		outline-style: dashed;
+		outline-width: 1px;
+	}
+
+	.similar-button {
+		width: max-content;
+		height: auto;
+	}
+
+	.download-button {
+    color: white;
+    padding: 15px 20px;
+    background-color: #f16336;
+    border: 1px solid #fff;
+    margin: 5px;
+    border-radius: 5px;
+    text-transform: uppercase;
+    display: inline-block;
+    text-decoration: none;
+    transition: background-color 0.2s ease-in-out;
+    -webkit-transition: background-color 0.2s ease-in-out;
+    text-align: right;
+    width: 250px;
+	text-align: center;
+	font-family: "Poppins",Helvetica,Arial,sans-serif;
+}
+
+
+</style>
+
+</head>
+<body>
+	{% include header.html %}
+	<main class="content">
+		<section class="project">
+			<div class="container">
+				<article>
+					<span class="h2">Handle Name</span>
+					<h1> {{ page.title }} </h1>
+					<span class="h2">A.K.A</span>
+					{{ page.aka }}
+					<div class="project-meta">
+						<span class="h2">Description</span>
+						<p>{{ page.description }}</p>
+						<span class="h2">Files</span>
+						<div class="grid-container">
+						{% for handle in handles %}
+							<div class="sizeHeader"> {{ handle.size }} </div>
+							{% if handle.files.scad != "" %}
+							<div >
+								<a class="download-button" href="{{ handle.files.scad | prepend: site.baseurl }}" download="{{page.name}}{{handle.size}}.scad">
+									<i class="fas fa-download"></i> SCAD 
+								</a>
+							</div>
+							{% else %}
+							<div class="fileCellNoFile">
+								<h2 class="fileText"> SCAD </h2>
+							</div>
+							{% endif %}
+						
+							<div class="fileCell">
+								{% if handle.files.stl != "" %}
+								<a class="fileDownloadButton" href="{{ handle.files.stl | prepend: site.baseurl }}" download="{{page.name}}{{handle.size}}.stl">
+									<h2 class="fileText"> STL </h2>
+								</a>
+								{% else %}
+								<h2 class="fileText"> STL </h2>
+								{% endif %}
+							</div>
+						{% endfor %}
+						</div>
+						<span class="h2" style="margin-top:  60px;"> Similar Handles</span>
+						<div class="grid-container-similar">
+						{% for item in sameFamily %}
+							<div class="similar-cell">
+								<a class="similar-button" href="{{ item.name }}"  title="{{ item.title }}" rel="nofollow" >
+									<img src="{{ item.images[0].image.url | prepend: site.baseurl }}" alt="{{ item.images[0].image.alt }}"/>
+								</a>
+							</div>
+						{% endfor %}
+						</div>
+					</div>
+				</article>
+				<aside>
+					<ul>	
+						<li>
+							<div id="3dModel"> </div>
+						</li>
+						{% for image in page.images %}
+						<li>
+							<img src="{{ image.image.url | prepend: site.baseurl }}" alt="{{ image.image.alt }}" />
+						</li>
+						{% endfor %}
+					</ul>
+				</aside>
+			</div>
+		</section>
+		<section class="project-navigation">
+			<div class="container">
+				{% if page.previous and page.previous.categories contains "projects" %}
+				<a title="Previous {{ page.previous.project.title }}" href="{{ page.previous.url | prepend: site.baseurl }}" class="prev">
+					<span class="h2">Previous</span>
+					<h2>{{ page.previous.project.title }}</h2>
+				</a>
+				{% endif %}
+				{% if page.next and page.next.categories contains "projects" %}
+				<a title="Next {{ page.next.project.title }}" href="{{ page.next.url | prepend: site.baseurl }}" class="next">
+					<span class="h2">Next</span>
+					<h2>{{ page.next.project.title }}</h2>
+				</a>
+				{% endif %}
+			</div>
+		</section>
+	</main>
+	{% include footer.html %}
+	<script src="{{ "/assets/scripts/vendor/jquery-1.12.4.min.js" | prepend: site.baseurl }}"></script>
+	<script src="{{ "/assets/scripts/vendor/scrollreveal.min.js" | prepend: site.baseurl }}"></script>
+	<script src="{{ "/assets/scripts/vendor/sticky-kit.min.js" | prepend: site.baseurl }}"></script>
+	<script src="{{ "/assets/scripts/project.js" | prepend: site.baseurl }}"></script>
+	<script type="module">
+
+			import * as THREE from '../assets/scripts/three.module.js';
+
+			import Stats from '../assets/scripts/stats.module.js';
+
+			import { STLLoader } from '../assets/scripts/STLLoader.js';
+
+			import { OrbitControls } from '../assets/scripts/OrbitControls.js';
+
+			var container;
+
+			var camera, cameraTarget, scene, renderer, controls;
+
+			init();
+			animate();
+
+			function init() {
+
+				container = document.getElementById( '3dModel' );
+
+				camera = new THREE.PerspectiveCamera( 35,  document.getElementById( '3dModel' ).offsetWidth / 400, 1, 15 );
+				camera.position.set( 1, 0,1/*3, 0.15, 3*/ );
+
+				cameraTarget = new THREE.Vector3( 0, /*- 0.25*/ 0, 0 );
+
+				scene = new THREE.Scene();
+				scene.background = new THREE.Color( /*0x72645b*/ 0xffffff );
+
+				// ASCII file
+
+				var loader = new STLLoader();
+			
+				loader.load( "{{ handles[0].files.stl | prepend: site.baseurl }}", function ( geometry ) {
+
+					var material = new THREE.MeshPhongMaterial( { color: 0xff5533, specular: 0x111111, shininess: 200 } );
+					var mesh = new THREE.Mesh( geometry, material );
+
+					mesh.position.set(0, 0, 0);
+					mesh.rotation.set(THREE.Math.degToRad(320), THREE.Math.degToRad(10),THREE.Math.degToRad(0));
+					mesh.scale.set( 0.01, 0.01, 0.01 );
+
+					scene.add( mesh );
+
+				} );
+
+
+				// Lights
+
+				scene.add( new THREE.HemisphereLight( 0x443333, 0x111122 ) );
+
+				addShadowedLight( 1, 1, 1, 0xffffff, 1.35 );
+				addShadowedLight( 0.5, 1, - 1, 0xffaa00, 1 );
+				// renderer
+
+				renderer = new THREE.WebGLRenderer( { antialias: true } );
+				renderer.setPixelRatio( window.devicePixelRatio );
+				renderer.setSize( document.getElementById( '3dModel' ).offsetWidth, 400);
+				renderer.outputEncoding = THREE.sRGBEncoding;
+
+				renderer.shadowMap.enabled = true;
+
+				container.appendChild( renderer.domElement );
+
+				window.addEventListener( 'resize', onWindowResize, false );
+
+				controls = new OrbitControls( camera, renderer.domElement );
+
+			}
+
+			function addShadowedLight( x, y, z, color, intensity ) {
+
+				var directionalLight = new THREE.DirectionalLight( color, intensity );
+				directionalLight.position.set( x, y, z );
+				scene.add( directionalLight );
+
+				directionalLight.castShadow = true;
+
+				var d = 1;
+				directionalLight.shadow.camera.left = - d;
+				directionalLight.shadow.camera.right = d;
+				directionalLight.shadow.camera.top = d;
+				directionalLight.shadow.camera.bottom = - d;
+
+				directionalLight.shadow.camera.near = 1;
+				directionalLight.shadow.camera.far = 4;
+
+				directionalLight.shadow.bias = - 0.002;
+
+			}
+
+			function onWindowResize() {
+
+				camera.aspect = document.getElementById( '3dModel' ).offsetWidth / 400;
+				camera.updateProjectionMatrix();
+
+				renderer.setSize( document.getElementById( '3dModel' ).offsetWidth, 400 );
+
+			}
+
+			function animate() {
+				requestAnimationFrame( animate );
+				render();
+			}
+
+			function render() {
+				camera.lookAt( cameraTarget );
+				renderer.render( scene, camera );
+			}
+
+		</script>
+</body>
+</html>
