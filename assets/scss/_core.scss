@@ -5,7 +5,7 @@ html {
 body {
 	background: $color-white;
 	color: $color-black;
-	font-family: $font-poppins;
+	font-family: $font-default;
 	font-size: 1.8em;
 	line-height: 1.6;
 	font-weight: 600;
@@ -26,8 +26,8 @@ h2,
 	color: $color-silver-chalice;
 	display: block;
 	font-family: $font-lekton;
-    font-size: 1.2rem;
-    font-weight: 500;
+    font-size: 2rem;
+    font-weight: 900;
     letter-spacing: .3rem;
     line-height: 1;
     margin: 0 0 1rem;
@@ -37,7 +37,7 @@ h2,
 h3,
 .h3 {
 	color: $color-black;
-	font-family: $font-poppins;
+	font-family: $font-default;
     font-size: 1.8rem;
     font-weight: 600;
     line-height: 1;
@@ -46,6 +46,7 @@ h3,
 
 p {
 	margin: 0;
+	font-weight: 400;
 }
 
 a {
@@ -168,3 +169,227 @@ blockquote {
 pre {
 	margin: 0 0 3rem;
 }
+
+.images-container, .files-container {
+	display: -webkit-box;
+	display: -ms-flexbox;
+	display: flex;
+	-webkit-box-orient: horizontal;
+	-webkit-box-direction: normal;
+	-ms-flex-flow: row;
+	flex-flow: row;
+	-ms-flex-wrap: wrap;
+	flex-wrap: wrap;
+	margin-top: 20px;
+	margin-bottom: 50px;
+}
+
+.new-image-container, .new-file-container {
+	display: grid;
+	grid-template-columns: 150px;
+	padding: 10px;
+}
+
+.new-image-row-1, .new-file-row-1 {
+	grid-row: 1;
+	width: 150px;
+	height: 150px;
+}
+
+.new-image-file-input, .new-file-input {
+	width: 100%;
+	height: 100%;
+}
+
+.new-image-display-hide {
+	display: none;
+}
+
+.new-image-row-2, .new-file-row-2  {
+	grid-row: 2;
+	width: 150px;
+}
+
+.new-image-alt-input, .new-file-size-input {
+	width: 150px;
+}
+
+.header-buttons {
+	padding-top: 15px;
+	padding-bottom: 15px;
+	color: white;
+	background: $color-site-blue;
+	border-radius: 10px;
+}
+
+.header-buttons:hover {
+	background: $color-site-dark-blue;
+	color: white;
+}
+
+.header-buttons-container {
+	display: grid;
+	grid-gap: 50px;
+	grid-template-columns: auto auto auto auto ;
+	text-align: center;
+	background: $color-site-blue;
+	border-radius: 10px;
+}
+
+.poster-red-font {
+	color: $color-site-red;
+}
+
+.poster-blue-font {
+	color: $color-site-blue;
+}
+
+.grid-files-container {
+	display: grid;
+	grid-template-columns: auto auto auto;
+	background-color: white;
+	padding: 5px;
+	align-content: center;
+}
+
+.grid-size-header {
+	grid-column: 1;
+	display: flex;
+    justify-content: center;
+	align-items: center;
+}
+
+.grid-files-header {
+	grid-column: 2 / span 2;
+	text-align: center;
+}
+
+.grid-file-type-header {
+	text-align: center;
+}
+
+.grid-scad-file {
+	grid-column: 2;
+}
+
+.grid-stl-file {
+	grid-column: 3;
+}
+
+.center-text {
+	text-align: center;
+}
+
+.grid-files-header-bottom {
+    border-bottom-style: solid;
+    border-bottom-color: #8B1304;
+	background: #FF422A;
+	color: white;	
+}
+
+.similar-cell {
+	margin: auto;
+	max-width: 100px;
+}
+
+.similar-button {
+	width: max-content;
+	height: auto;
+}
+
+.similiar-img {
+	border-radius: 50%;
+    width: 100px;
+    height: 100px;
+    border-style: dashed;
+	object-fit: cover;
+	border-color: $color-site-blue;
+}
+.similiar-img:hover {
+	border-color: $color-site-red;
+	background-color: $color-site-red;
+}
+
+.login-container {
+	padding-right: 10px;
+	font-size: 30px;
+	float:right;
+}
+
+.login-icon {
+ color: $color-site-dark-blue;
+}
+
+.login-icon:hover {
+	color: $color-site-blue;
+}
+
+.login-page-container {
+	background: white;
+	width: 300px;
+	padding: 30px; 
+	border-style: dashed; 
+	border-radius: 50px;
+}
+
+.login-page-login-button {
+	color: white;
+	border: none;
+	background: $color-site-green;
+	height: 60px;
+	width: 100%;
+	border-bottom-style: solid;
+	border-color: $color-site-dark-green;
+	border-width: 5px;
+	border-radius: 50px;
+	font-size: 14px;
+	font-weight: 600;
+	outline: none;
+	margin-bottom: 19px;
+}
+
+.login-page-login-button:hover {
+	cursor: pointer;
+}
+
+.login-page-register-button-container {
+	text-align: center;
+	width: 100%;
+	padding-bottom: 20px;
+	padding-top: 20px;
+	border-top-style: solid;
+	border-color: lightgray;
+	border-width: 1px;
+}
+
+.login-page-register-button {
+	border: none;
+	background: $color-site-yellow;
+	color: white;
+	width: 100%;
+	height: 60px;
+	display: inline-block;
+	text-decoration: none;
+	font-size: 14px;
+	font-weight: 600;
+
+	border-bottom-style: solid;
+	border-color: $color-site-dark-yellow;
+	border-width: 5px;
+	border-radius: 50px;
+	line-height: 60px;
+}
+
+.login-page-warning {
+	//border-style: solid;
+	//border-color: $color-site-red;
+	padding: 10px;
+	background-color: $color-site-red;
+	color: white;
+	margin-bottom: 22px;
+	border-radius: 25px;
+	text-align: center;
+	font-size: 13px;
+}
+
+

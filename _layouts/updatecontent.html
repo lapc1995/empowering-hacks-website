@@ -1,0 +1,507 @@
+---
+---
+
+{% assign design = site.designs | where: "name", page.name %}
+{% assign design_handles = site.handles | where: "design", page.name %}
+
+{% assign families = site.designs | map: 'family' | uniq %}
+{% assign handles = site.handles | map: 'size' | uniq %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<title>{{ site.author }} / {{ site.tagline }}</title>
+	<meta name="author" content="{{ site.author }}">
+	<meta name="description" content="{{ site.description }}">
+	<meta name="keywords" content="{{ site.keywords }}">
+	{% include head.html %}
+</head>
+<body>
+	{% include header.html %}
+	<main class="content">
+		<section class="projects">
+			<div class="container">
+				<form>
+					Name <input id="designName" type="text" name="fname" value="{{ design[0].title }}" disabled><br>
+					Also Known As<input id="designAKA" type="text" name="lname" value="{{ design[0].aka }}"><br>
+					Description<input id="designDescription" type="text" name="lname" value="{{ design[0].description }}"><br>
+					Family <input id="designFamily" type="text" name="lname" list="families" value="{{ design[0].family }}"><br>
+					<datalist id="families">
+					{% for item in families %}
+						<option> {{ item }} </option>
+					{% endfor %}
+					</datalist>
+					<h2> Images </h2>
+					<div id="imagesContainer" class="images-container">
+						<button id="addImageButton" type="button" onclick="addImage()"> Add Image </button>
+					</div> 
+					<h2> Files </h2>
+					<div id="filesContainer" class="files-container">
+						<button id="addFileButton" type="button" onclick="addFile()"> Add File </button>
+					</div>
+					<button type="button" onclick="uploadData()"></button>
+				</form>
+			</div>
+		</section>
+		<section class="intro">
+			<div class="container">
+				<h2>About me</h2>
+				<p>{{ site.description }}</p>
+			</div>
+		</section>
+		<section class="projects">
+			<div class="container">
+				<h2>Projects I have worked on.</h2>
+				<ul class="projects-list">
+					{% for item in site.designs reversed %}
+						<li>
+							<a href="{{ item.url | prepend: site.baseurl }}">
+								<div class="img-wrapper">
+									<img src="{{ item.images[0].image.url | prepend: site.baseurl }}" alt="{{ item.images[0].image.alt }}" />
+								</div>
+								<span class="h2">{{ item.description }}</span>
+								<h3>{{ item.title }}</h3>
+							</a>
+						</li>
+					{% endfor %}
+				</ul>
+			</div>
+		</section>
+	</main>
+	{% include footer.html %}
+	<script src="{{ "/assets/scripts/vendor/scrollreveal.min.js" | prepend: site.baseurl }}"></script>
+	<script src="{{ "/assets/scripts/home.js" | prepend: site.baseurl }}"></script>
+	<script src="{{ "/assets/scripts/vendor/jquery-1.12.4.min.js" | prepend: site.baseurl }}"></script>
+	<script src="{{ "/assets/scripts/vendor/scrollreveal.min.js" | prepend: site.baseurl }}"></script>
+	<script src="{{ "/assets/scripts/vendor/sticky-kit.min.js" | prepend: site.baseurl }}"></script>
+	<script src="{{ "/assets/scripts/project.js" | prepend: site.baseurl }}"></script>
+	<script>
+
+		var imageN = 0;
+		var fileN = 0;
+
+		var existingImages = [];
+		var existingFiles = [];
+
+		{% for item in design[0].images %}
+		addExistingImage("{{ item.image.url }}", "{{ item.image.alt }}");
+		{% endfor %}
+
+		{% for item1 in design_handles %}
+			{% for item2 in item1.files %}
+		addExistingFile("{{ item2.file.url }}", "{{ item1.size }}");
+			{% endfor %}
+		{% endfor %}
+
+		function uploadData() {
+
+			let name = document.getElementById('designName').value;
+
+			let aka = document.getElementById('designAKA').value;
+
+			let description = document.getElementById('designDescription').value;
+
+			let family =  document.getElementById('designFamily').value;
+
+			let rawHtmlImages = document.getElementsByClassName("new-image-file-input");
+			let images = [];
+			for(let i = 0; i < rawHtmlImages.length; i++) {
+				console.log(rawHtmlImages[i]);
+				if(rawHtmlImages[i].files[0] != undefined)
+					images.push(rawHtmlImages[i].files[0]);
+			}
+
+			let rawHtmlAlts = document.getElementsByClassName("new-image-alt-input");
+			let alts = [];
+			for(let i = 0; i < rawHtmlAlts.length; i++) {
+				if(rawHtmlAlts[i].value != '' && rawHtmlAlts[i].value != undefined)
+					alts.push(rawHtmlAlts[i].value);
+			}
+
+			let rawHtmlFiles = document.getElementsByClassName("new-file-input");
+			let files = [];
+			for(let i = 0; i < rawHtmlFiles.length; i++) {
+				console.log(rawHtmlFiles[i]);
+				if(rawHtmlFiles[i].files[0] != undefined)
+					files.push(rawHtmlFiles[i].files[0]);
+			}
+
+			let rawHtmlSizes = document.getElementsByClassName("new-file-size-input");
+			let sizes = [];
+			for(let i = 0; i < rawHtmlSizes.length; i++) {
+				if(rawHtmlSizes[i].value != '' && rawHtmlSizes[i].value != undefined)
+					sizes.push(rawHtmlSizes[i].value);
+			}
+
+			let rawHtmlExistingImages = document.getElementsByClassName("existing-image-file");
+			let currentImages = [];
+			for(let i = 0; i < rawHtmlExistingImages.length; i++) {
+				let value = rawHtmlExistingImages[i].getAttribute('value');
+				if(value != undefined)
+					currentImages.push(value);
+			}
+
+			let rawHtmlExistingAlts = document.getElementsByClassName("existing-image-alt-input");
+			let currentAlts = [];
+			for(let i = 0; i < rawHtmlExistingAlts.length; i++) {
+				if(rawHtmlExistingAlts[i].value != '' && rawHtmlExistingAlts[i].value != undefined)
+					currentAlts.push(rawHtmlExistingAlts[i].value);
+			}
+
+			let rawHtmlExistingFiles = document.getElementsByClassName("existing-file-input");
+			let currentFiles = [];
+			for(let i = 0; i < rawHtmlExistingFiles.length; i++) {
+				let value = rawHtmlExistingFiles[i].getAttribute('value');
+				if(value != undefined)
+					currentFiles.push(value);
+			}
+
+			let rawHtmlExistingSizes = document.getElementsByClassName("existing-file-size-input");
+			let currentSizes = [];
+			for(let i = 0; i < rawHtmlExistingSizes.length; i++) {
+				if(rawHtmlExistingSizes[i].value != '' && rawHtmlExistingSizes[i].value != undefined)
+					currentSizes.push(rawHtmlExistingSizes[i].value);
+			}
+
+			console.log(name);
+			console.log(aka);
+			console.log(description);
+			console.log(family);
+			console.log(images);
+			console.log(alts);
+			console.log(files);
+			console.log(sizes);
+			console.log(currentImages);
+			console.log(currentAlts);
+			console.log(currentFiles);
+			console.log(currentSizes);
+
+			let currentImagesAlts = [];
+			let currentFilesSizes = [];
+
+			for(let i = 0; i < currentImages.length; i++) {
+				currentImagesAlts.push({url: currentImages[i], alt: currentAlts[i]});
+			}
+
+			for(let i = 0; i < currentFiles.length; i++) {
+				currentFilesSizes.push({url: currentFiles[i], size: currentSizes[i]});
+			}
+
+			console.log(currentImagesAlts);
+			console.log(currentFilesSizes);
+
+			let missingImages = [];
+			if(currentImagesAlts.length != existingImages.length) {
+				for(let i = 0; i < existingImages.length; i++) {
+					if(!currentImagesAlts.some( elem => elem.url === existingImages[i].url))
+						missingImages.push(existingImages[i]);
+				}
+			}
+
+			let missingFiles = [];
+			if(currentFilesSizes.length != existingFiles.length) {
+				for(let i = 0; i < existingFiles.length; i++) {
+					if(!currentFilesSizes.some( elem => elem.url === existingFiles[i].url))
+						missingFiles.push(existingFiles[i]);
+				}
+			}
+
+			console.log(missingImages);
+			console.log(missingFiles);
+
+			EmpoweringHacksUploader.deleteFiles(missingImages.concat(missingFiles));
+			
+			EmpoweringHacksUploader.uploadDesignAndHandles(name, aka, description, family, images, alts, files, sizes, currentImages, currentAlts, currentFiles, currentSizes, (resolve) => {
+				GitHubHelper.commit().then((result) => console.log(result), (error) => console.log(error));
+			}, (reject) => {console.log(reject)});
+			
+			
+		}
+	
+		function setThumbnail(fileForUpload, imgId) {
+
+    		var file = document.getElementById(fileForUpload).files[0];
+
+			let reader = new FileReader();
+   
+			reader.onload = (event) => {
+
+				document.getElementById(imgId).style.display = "block";
+				document.getElementById(fileForUpload).style.display = "none";
+
+				var imageThumbnail = document.getElementById(imgId);
+				imageThumbnail.src = reader.result;
+			}
+
+			reader.onerror = (event) => {
+				console.log("error");
+			}
+
+			reader.readAsDataURL(file);
+		
+		};
+
+		function addImage() {
+
+			let gridContainer = document.createElement('div');
+			gridContainer.id = `container${imageN}`;
+			gridContainer.classList.add("new-image-container");
+
+			let gridRow1 = document.createElement('div');
+			gridRow1.classList.add("new-image-row-1");
+
+			let fileInput = document.createElement('input');
+			fileInput.id = `fileInput${imageN}`;
+			fileInput.classList.add("new-image-file-input");
+			fileInput.setAttribute("name", "imageUpload");
+			fileInput.setAttribute("type", "file");
+			fileInput.setAttribute("accept", "image/*");
+			fileInput.setAttribute("data-id", imageN);
+			fileInput.addEventListener("change", () => {
+				setThumbnail(`fileInput${fileInput.getAttribute('data-id')}`, `image${fileInput.getAttribute('data-id')}`);
+			});
+			
+			let imageDisplay = document.createElement('img');
+			imageDisplay.id = `image${imageN}`;
+			imageDisplay.src = "";
+			imageDisplay.setAttribute("name", "imageUpload");
+			imageDisplay.setAttribute("width", "150px");
+			imageDisplay.setAttribute("height", "150px");
+			imageDisplay.setAttribute("alt", "Image Placeholder");
+			imageDisplay.classList.add("new-image-display-hide");
+
+			let gridRow2 = document.createElement('div');
+			gridRow2.classList.add("new-image-row-2");
+
+			let altInput = document.createElement('input');
+			altInput.id = `alt${imageN}`;
+			altInput.setAttribute("name", "altText");
+			altInput.setAttribute("type", "text");
+			altInput.setAttribute("placeholder", "Alt Text");
+			altInput.classList.add("new-image-alt-input");
+
+			let removeButton = document.createElement('button');
+			removeButton.innerText = "Remove";
+			removeButton.setAttribute("data-id", imageN);
+			removeButton.setAttribute("type", "button");
+			removeButton.addEventListener("click", () => {
+				removeImage(removeButton.getAttribute('data-id'));
+			});
+
+			gridContainer.appendChild(gridRow1);
+			gridRow1.appendChild(fileInput);
+			gridRow1.appendChild(imageDisplay);
+			gridContainer.appendChild(gridRow2);
+			gridRow2.appendChild(altInput);
+			gridRow2.appendChild(removeButton);
+
+			document.getElementById("imagesContainer").insertBefore(gridContainer, document.getElementById("addImageButton"));
+			
+			imageN++;
+
+		}
+
+		function addExistingImage(url, alt) {
+
+			existingImages.push({url, alt});
+
+			let gridContainer = document.createElement('div');
+			gridContainer.id = `container${imageN}`;
+			gridContainer.classList.add("new-image-container");
+
+			let gridRow1 = document.createElement('div');
+			gridRow1.classList.add("new-image-row-1");
+
+			let fileInput = document.createElement('div');
+			fileInput.id = `fileInput${imageN}`;
+			//fileInput.classList.add("new-image-file-input");
+			fileInput.classList.add("existing-image-file");
+			fileInput.setAttribute("name", "imageUpload");
+			fileInput.setAttribute("value", url);
+			fileInput.setAttribute("data-id", imageN);
+			fileInput.style.display = "none";
+
+			let imageDisplay = document.createElement('img');
+			imageDisplay.id = `image${imageN}`;
+			imageDisplay.src = "{{ site.baseurl }}/" + url;
+			imageDisplay.setAttribute("name", "imageUpload");
+			imageDisplay.setAttribute("width", "150px");
+			imageDisplay.setAttribute("height", "150px");
+			imageDisplay.setAttribute("alt", "Image Placeholder");
+			imageDisplay.classList.add("new-image-display");
+
+			let gridRow2 = document.createElement('div');
+			gridRow2.classList.add("new-image-row-2");
+
+			let altInput = document.createElement('input');
+			altInput.id = `alt${imageN}`;
+			altInput.setAttribute("name", "altText");
+			altInput.setAttribute("type", "text");
+			altInput.setAttribute("placeholder", "Alt Text");
+			altInput.setAttribute("disabled", "true");
+			altInput.value = alt;
+			//altInput.classList.add("new-image-alt-input");
+			altInput.classList.add("existing-image-alt-input");
+
+			let removeButton = document.createElement('button');
+			removeButton.innerText = "Remove";
+			removeButton.setAttribute("data-id", imageN);
+			removeButton.setAttribute("type", "button");
+			removeButton.addEventListener("click", () => {
+				removeImage(removeButton.getAttribute('data-id'));
+			});
+
+			gridContainer.appendChild(gridRow1);
+			gridRow1.appendChild(fileInput);
+			gridRow1.appendChild(imageDisplay);
+			gridContainer.appendChild(gridRow2);
+			gridRow2.appendChild(altInput);
+			gridRow2.appendChild(removeButton);
+
+			document.getElementById("imagesContainer").insertBefore(gridContainer, document.getElementById("addImageButton"));
+
+			imageN++;
+
+		}
+
+
+		function removeImage(id) {
+			document.getElementById(`container${id}`).remove();
+		}
+
+		function addFile() {
+			let gridContainer = document.createElement('div');
+			gridContainer.id = `containerFile${fileN}`;
+			gridContainer.classList.add("new-file-container");
+
+			let gridRow1 = document.createElement('div');
+			gridRow1.classList.add("new-file-row-1");
+
+			let fileInput = document.createElement('input');
+			fileInput.id = `fileInput${imageN}`;
+			fileInput.classList.add("new-file-input");
+			fileInput.setAttribute("name", "fileUpload");
+			fileInput.setAttribute("type", "file");
+
+			/*
+			fileInput.addEventListener("change", () => {
+				setThumbnail(`fileInput${fileInput.getAttribute('data-id')}`, `image${fileInput.getAttribute('data-id')}`);
+			});
+			*/
+
+			let gridRow2 = document.createElement('div');
+			gridRow2.classList.add("new-file-row-2");
+
+			let sizeDataList = document.createElement('datalist');
+			sizeDataList.id = "sizeDataList";
+			
+			{% for item in handles %}
+			let size{{ forloop.index0  }} = document.createElement('option');
+			size{{ forloop.index0  }}.text = "{{ item }}";
+			sizeDataList.appendChild(size{{ forloop.index0 }});
+			{% endfor %}
+
+
+			let sizeInput = document.createElement('input');
+			sizeInput.id = `size${fileN}`;
+			sizeInput.setAttribute("type", "text");
+			sizeInput.setAttribute("list", "sizeDataList");
+			sizeInput.setAttribute("placeholder", "Size");
+			sizeInput.classList.add("new-file-size-input");
+
+			let removeButton = document.createElement('button');
+			removeButton.innerText = "Remove";
+			removeButton.setAttribute("data-id", fileN);
+			removeButton.setAttribute("type", "button");
+			removeButton.addEventListener("click", () => {
+				removeFile(removeButton.getAttribute('data-id'));
+			});
+
+			gridContainer.appendChild(gridRow1);
+			gridRow1.appendChild(fileInput);
+			gridContainer.appendChild(gridRow2);
+			gridRow2.appendChild(sizeInput);
+			gridRow2.appendChild(sizeDataList);
+			gridRow2.appendChild(removeButton);
+
+			document.getElementById("filesContainer").insertBefore(gridContainer, document.getElementById("addFileButton"));
+			
+			fileN++;
+		}
+
+		function addExistingFile(url, size) {
+
+			existingFiles.push({url, size});
+
+			var splitName = url.split('/');
+
+			let gridContainer = document.createElement('div');
+			gridContainer.id = `containerFile${fileN}`;
+			gridContainer.classList.add("new-file-container");
+
+			let gridRow1 = document.createElement('div');
+			gridRow1.classList.add("new-file-row-1");
+
+			let fileInput = document.createElement('div');
+			fileInput.id = `fileInput${imageN}`;
+			//fileInput.classList.add("new-file-input");
+			fileInput.classList.add("existing-file-input");
+			fileInput.setAttribute("name", "fileUpload");
+			fileInput.style.display = "none";
+			fileInput.setAttribute("value", url);
+
+			let fileName = document.createElement('div');
+			fileName.id = `fileInput${imageN}`;
+			fileName.innerText = splitName[splitName.length-1];
+			fileName.classList.add("display-file-name");
+
+			let gridRow2 = document.createElement('div');
+			gridRow2.classList.add("new-file-row-2");
+
+			let sizeDataList = document.createElement('datalist');
+			sizeDataList.id = "sizeDataList";
+			
+			{% for item in handles %}
+			let size{{ forloop.index0  }} = document.createElement('option');
+			size{{ forloop.index0  }}.text = "{{ item }}";
+			sizeDataList.appendChild(size{{ forloop.index0 }});
+			{% endfor %}
+
+			let sizeInput = document.createElement('input');
+			sizeInput.id = `size${fileN}`;
+			sizeInput.value = size;
+			sizeInput.setAttribute("type", "text");
+			sizeInput.setAttribute("list", "sizeDataList");
+			sizeInput.setAttribute("placeholder", "Size");
+			sizeInput.setAttribute("disabled", "true");
+			//sizeInput.classList.add("new-file-size-input");
+			sizeInput.classList.add("existing-file-size-input");
+
+			let removeButton = document.createElement('button');
+			removeButton.innerText = "Remove";
+			removeButton.setAttribute("data-id", fileN);
+			removeButton.setAttribute("type", "button");
+			removeButton.addEventListener("click", () => {
+				removeFile(removeButton.getAttribute('data-id'));
+			});
+
+			gridContainer.appendChild(gridRow1);
+			gridRow1.appendChild(fileName);
+			gridRow1.appendChild(fileInput);
+			gridContainer.appendChild(gridRow2);
+			gridRow2.appendChild(sizeInput);
+			gridRow2.appendChild(sizeDataList);
+			gridRow2.appendChild(removeButton);
+
+			document.getElementById("filesContainer").insertBefore(gridContainer, document.getElementById("addFileButton"));
+			
+			fileN++;
+		}
+
+		function removeFile(id) {
+			document.getElementById(`containerFile${id}`).remove();
+		}
+	
+	</script>
+</body>
+</html>

@@ -5,6 +5,10 @@ size: 5mm
 images:
 description:
 files:
-    stl: "/assets/files/golfball5mm/1_golfball.stl"
-    scad: "/assets/files/golfball5mm/1_golfball.scad"
+    - file:
+        url: "/assets/files/golfball5mm/1_golfball.stl"
+        type: "stl"
+    - file:
+        url: "/assets/files/golfball5mm/1_golfball.scad"
+        type: "scad"
 ---

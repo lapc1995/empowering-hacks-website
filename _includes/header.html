@@ -1,7 +1,77 @@
 <header class="header">
-	<div class="container">
+	<div id="header-container" class="container" style="padding-bottom: 30px;">
 		<h1 class="logo">
-			<a title="{{ site.author }}" href="{{ site.baseurl | append: "/" }}">Empowering Hacks</a>
+			<a title="{{ site.author }}" href="{{ site.baseurl | append: "/" }}">
+				<img src="{{ site.baseurl }}/assets/images/empowering_hacks_logo_2.svg" alt="Empowering Hacks Logo" height=120px>
+			</a>
 		</h1>
+		<div id="login-container" class="login-container"></div>
 	</div>
+	<div id="header-container-buttons" class="container">
+		<div class="header-buttons-container">
+			<a class="header-buttons" id="homeButton" href="{{site.baseurl}}/"> Home </a>
+			<a class="header-buttons" id="aboutButton" href="{{site.baseurl}}/about"> About </a>
+			<a class="header-buttons" id="instructionsButton" href="{{site.baseurl}}/instructions"> Instructions </a>
+			<a class="header-buttons" id="handlesButton" href="{{site.baseurl}}/handles"> Handles </a>
+		</div>
+
+	</div>
+	<script>
+		let container = document.getElementById("login-container");
+		if(GitHubHelper.isLoggedIn()) {
+			GitHubHelper.getUserData().then(
+				({ data:{login, name}}) => {
+					let displayName = name == '' || name == undefined ? login : name;
+
+					let greetingContainer = document.createElement('div');
+					greetingContainer.style = "display: flex;";
+
+					let greeting = document.createElement('h3');
+					greeting.innerText = `Hi ${displayName}!`;
+					greeting.style = "padding-right: 10px";
+					greetingContainer.appendChild(greeting);
+
+					let logoutIcon = document.createElement('i');
+					logoutIcon.classList.add("fas");
+					logoutIcon.classList.add("fa-sign-out-alt");
+		
+					let logoutButton = document.createElement('a');
+					logoutButton.href = `{{site.baseurl}}/logout`;
+					logoutButton.appendChild(logoutIcon);
+
+					greetingContainer.appendChild(logoutButton);
+
+					container.appendChild(greetingContainer);
+				},
+				(error) => {
+					console.log(error);
+				}
+			);
+
+		} else {
+
+			let greetingContainer = document.createElement('div');
+			greetingContainer.style = "display: flex;";
+
+			let loginIcon = document.createElement('i');
+			loginIcon.classList.add("fas");
+			loginIcon.classList.add("fa-user-circle");
+			loginIcon.classList.add("login-icon");
+
+			//<i class="fas fa-user-circle"></i>
+		
+			let loginButton = document.createElement('a');
+			loginButton.href = `{{site.baseurl}}/login`;
+			//loginButton.innerText = "Login   ";
+			loginButton.appendChild(loginIcon);
+
+			greetingContainer.appendChild(loginButton);
+
+			container.appendChild(greetingContainer);
+
+			container.appendChild(loginButton);
+
+		}
+
+	</script>
 </header>

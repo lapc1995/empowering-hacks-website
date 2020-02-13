@@ -5,6 +5,7 @@ size: 4.5mm
 images:
 description:
 files:
-    stl: "/assets/files/halfball4.5mm/5_halfball.stl"
-    scad: ""
+    - file:
+        url: "/assets/files/halfball4.5mm/5_halfball.stl"
+        type: "stl"
 ---

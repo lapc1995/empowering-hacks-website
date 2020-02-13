@@ -1,0 +1,51 @@
+---
+---
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<title>{{ site.author }} / {{ site.tagline }}</title>
+	<meta name="author" content="{{ site.author }}">
+	<meta name="description" content="{{ site.description }}">
+	<meta name="keywords" content="{{ site.keywords }}">
+	{% include head.html %}
+</head>
+<body>
+	{% include header.html %}
+	<main class="content" style="padding: 0px;">
+		<section>
+			<div style="display: flex;">
+				{% include login_menu.html %}
+			</div>
+		</section>
+	</main>
+	{% include footer.html %}
+	<script>
+
+		if(GitHubHelper.isLoggedIn()) {
+			window.location.replace('{{ site.baseurl }}/');
+		}
+
+		async function login() {
+
+			await GitHubHelper.login(
+				document.getElementById("username").value,
+				document.getElementById("password").value,
+				(resolve) => {
+					document.getElementById("username").value = ''
+					document.getElementById("password").value = '';
+					window.location.replace('{{ site.baseurl }}/');
+				},
+				(error) => {
+					document.getElementById("password").value = '';
+					var loginInfo = document.getElementById("login_info");
+					loginInfo.innerText = error == '-1' ? 'Login Failed' : error;
+					loginInfo.style = "display: block";
+
+					console.log(error);
+				});
+
+		}
+
+	</script>
+</body>
+</html>

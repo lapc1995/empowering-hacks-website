@@ -1,12 +1,19 @@
 # User config
 author: "Pineapple"
 tagline: "Pineapple Certfied Jekyll Theme"
-description: "In 1493, explorer Christopher Columbus found pineapples on Guadeloupe Island in the Caribbean. Pineapple on pizza soon followed..."
-keywords: "Pineapple, Pineapple Pizza, Pineapple House"
+description: "This is Empowering Hacks where disabled poeple were brought together with an academic maker with the goal of solving problems through Making. Disabled problems have usally been solved by the non-disabled which miss out key issues that disabled people have. By having disabled people work on the problems that affect them, it should lead to better solutions being found and enabling them to solve their own problems through Making."
+keywords: "Empowering Hacks, hacks, empowering"
 email: "pineapple@example.com"
 linkedin: "https://www.linkedin.com/"
 twitter: "https://twitter.com/"
 github: "https://github.com/"
+
+repo: empowering-hacks-website
+branch: master
+
+colors:
+  red: '#e12743'
+  blue: '#2370a4'
 
 # Site config
 baseurl: "/empowering-hacks-website"
@@ -17,6 +24,9 @@ sass:
 
 collections:
   designs:
+    output: true
+    permalink: /:collection/:name
+  designs_update:
     output: true
     permalink: /:collection/:name
   handles:

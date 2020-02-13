@@ -1,0 +1,17 @@
+---
+---
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	{% include head.html %}
+</head>
+<body>
+	{% include header.html %}
+	{% include footer.html %}
+	<script>
+		GitHubHelper.logout(() => {
+			window.location.replace('{{ site.baseurl }}/');
+		});
+	</script>
+</body>
+</html>

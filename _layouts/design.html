@@ -4,6 +4,7 @@
 {% assign handles = site.handles | where: "design", page.name %}
 {% assign family = site.designs | where: "family", page.family %}
 {% assign sameFamily = family | where_exp:"item","item.name != page.name" %}
+{% assign 3dHandleModel = handles[0].files | where_exp:"item","item.file.type == 'stl'" | first %}
 
 <!DOCTYPE html>
 <html-- lang="en">
@@ -16,20 +17,6 @@
 
 <style>
 
-	.grid-container {
-		display: grid;
-		grid-template-columns: auto auto auto auto;
-		grid-gap: 5px;
-		background-color: white;
-		padding: 5px;
-		align-content: center;
-	}
-
-	.sizeHeader {
-		grid-column-start: 1;
-		grid-column-end: 3;
-		text-align: start;
-	}
 
 	.fileCell {
 		outline-style: groove;
@@ -68,19 +55,6 @@
 		align-content: center;
 	}
 
-	.similar-cell {
-		max-width: 150px;
-	}
-
-	.similar-cell:hover {
-		outline-style: dashed;
-		outline-width: 1px;
-	}
-
-	.similar-button {
-		width: max-content;
-		height: auto;
-	}
 
 	.download-button {
     color: white;
@@ -114,34 +88,42 @@
 					<h1> {{ page.title }} </h1>
 					<span class="h2">A.K.A</span>
 					{{ page.aka }}
-					<div class="project-meta">
+					<div class="project-meta" style="max-width: 525px;">
 						<span class="h2">Description</span>
 						<p>{{ page.description }}</p>
-						<span class="h2">Files</span>
-						<div class="grid-container">
+						<span class="h2"> 3D Model Files </span>
+						<div class="grid-files-container">
+							<div class="grid-size-header center-text grid-files-header-bottom "> Mount Diameter </div>
+							<div class="grid-file-type-header center-text grid-files-header-bottom "> SCAD </div>
+							<div class="grid-file-type-header center-text grid-files-header-bottom "> STL </div>
 						{% for handle in handles %}
-							<div class="sizeHeader"> {{ handle.size }} </div>
-							{% if handle.files.scad != "" %}
-							<div >
-								<a class="download-button" href="{{ handle.files.scad | prepend: site.baseurl }}" download="{{page.name}}{{handle.size}}.scad">
-									<i class="fas fa-download"></i> SCAD 
+							<div class="center-text"> {{ handle.size }} </div>
+							{% for file in handle.files %}
+								{% if file.file.type == "scad" %}
+							<div class="grid-scad-file center-text">
+								<a href="{{ file.file.url | prepend: site.baseurl }}" download="{{page.name}}{{handle.size}}.{{file.file.type}}">
+									<i class="fas fa-download"></i>
 								</a>
 							</div>
-							{% else %}
-							<div class="fileCellNoFile">
-								<h2 class="fileText"> SCAD </h2>
-							</div>
-							{% endif %}
-						
-							<div class="fileCell">
-								{% if handle.files.stl != "" %}
-								<a class="fileDownloadButton" href="{{ handle.files.stl | prepend: site.baseurl }}" download="{{page.name}}{{handle.size}}.stl">
-									<h2 class="fileText"> STL </h2>
-								</a>
-								{% else %}
-								<h2 class="fileText"> STL </h2>
+									{% break %}
 								{% endif %}
+								{% if forloop.rindex0 == 0 %}
+								<div class="grid-stl-file center-text"></div>
+								{% endif %}
+							{% endfor %}
+							{% for file in handle.files %}
+								{% if file.file.type == "stl" %}
+							<div class="grid-stl-file center-text">
+								<a href="{{ file.file.url | prepend: site.baseurl }}" download="{{page.name}}{{handle.size}}.{{file.file.type}}">
+									<i class="fas fa-download"></i>
+								</a>
 							</div>
+									{% break %}
+								{% endif %}
+								{% if forloop.rindex0 == 0 %}
+							<div class="grid-stl-file center-text"></div>
+								{% endif %}
+							{% endfor %}
 						{% endfor %}
 						</div>
 						<span class="h2" style="margin-top:  60px;"> Similar Handles</span>
@@ -149,7 +131,7 @@
 						{% for item in sameFamily %}
 							<div class="similar-cell">
 								<a class="similar-button" href="{{ item.name }}"  title="{{ item.title }}" rel="nofollow" >
-									<img src="{{ item.images[0].image.url | prepend: site.baseurl }}" alt="{{ item.images[0].image.alt }}"/>
+									<img class="similiar-img" src="{{ item.images[0].image.url | prepend: site.baseurl }}" alt="{{ item.images[0].image.alt }}"/>
 								</a>
 							</div>
 						{% endfor %}
@@ -157,9 +139,22 @@
 					</div>
 				</article>
 				<aside>
-					<ul>	
+					<ul style="max-width: 700px; float: right;">
+						{% if 3dHandleModel != null %}
 						<li>
 							<div id="3dModel"> </div>
+						</li>
+						{% endif %}
+						<li>
+							<div class="slideshow-container">
+								{% for image in page.images %}
+							<div class="mySlides fade">
+								<div class="numbertext">{{ forloop.index }} / {{ page.images.size }}</div>
+									<img style="width:100%" src="{{ image.image.url | prepend: site.baseurl }}" alt="{{ image.image.alt }}" >
+								<div class="text">Caption Text</div>
+							</div>
+								{% endfor %}
+							</div>
 						</li>
 						{% for image in page.images %}
 						<li>
@@ -170,28 +165,38 @@
 				</aside>
 			</div>
 		</section>
-		<section class="project-navigation">
-			<div class="container">
-				{% if page.previous and page.previous.categories contains "projects" %}
-				<a title="Previous {{ page.previous.project.title }}" href="{{ page.previous.url | prepend: site.baseurl }}" class="prev">
-					<span class="h2">Previous</span>
-					<h2>{{ page.previous.project.title }}</h2>
-				</a>
-				{% endif %}
-				{% if page.next and page.next.categories contains "projects" %}
-				<a title="Next {{ page.next.project.title }}" href="{{ page.next.url | prepend: site.baseurl }}" class="next">
-					<span class="h2">Next</span>
-					<h2>{{ page.next.project.title }}</h2>
-				</a>
-				{% endif %}
-			</div>
-		</section>
 	</main>
 	{% include footer.html %}
 	<script src="{{ "/assets/scripts/vendor/jquery-1.12.4.min.js" | prepend: site.baseurl }}"></script>
-	<script src="{{ "/assets/scripts/vendor/scrollreveal.min.js" | prepend: site.baseurl }}"></script>
+	<!--script src="{{ "/assets/scripts/vendor/scrollreveal.min.js" | prepend: site.baseurl }}"></script>
 	<script src="{{ "/assets/scripts/vendor/sticky-kit.min.js" | prepend: site.baseurl }}"></script>
-	<script src="{{ "/assets/scripts/project.js" | prepend: site.baseurl }}"></script>
+	<script src="{{ "/assets/scripts/project.js" | prepend: site.baseurl }}"></script-->
+		<script>
+			var slideIndex = 0;
+			showSlides();
+			
+			function showSlides() {
+			  var i;
+			  var slides = document.getElementsByClassName("mySlides");
+			  //var dots = document.getElementsByClassName("dot");
+			  for (i = 0; i < slides.length; i++) {
+				slides[i].style.display = "none";  
+			  }
+			  slideIndex++;
+			  if (slideIndex > slides.length) {slideIndex = 1}    
+			 /* 
+			  for (i = 0; i < dots.length; i++) {
+				dots[i].className = dots[i].className.replace(" active", "");
+			  }
+			  */
+			  slides[slideIndex-1].style.display = "block";  
+			  //dots[slideIndex-1].className += " active";
+			  setTimeout(showSlides, 2000); // Change image every 2 seconds
+			}
+			</script>
+
+
+	{% if 3dHandleModel != null %}
 	<script type="module">
 
 			import * as THREE from '../assets/scripts/three.module.js';
@@ -225,7 +230,7 @@
 
 				var loader = new STLLoader();
 			
-				loader.load( "{{ handles[0].files.stl | prepend: site.baseurl }}", function ( geometry ) {
+				loader.load( "{{ 3dHandleModel.file.url | prepend: site.baseurl }}", function ( geometry ) {
 
 					var material = new THREE.MeshPhongMaterial( { color: 0xff5533, specular: 0x111111, shininess: 200 } );
 					var mesh = new THREE.Mesh( geometry, material );
@@ -303,5 +308,6 @@
 			}
 
 		</script>
+		{% endif %}
 </body>
 </html>
