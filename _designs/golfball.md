@@ -9,19 +9,31 @@ images:
         url: "/assets/images/designs/golfball/1.png"
         alt: "Red Pineapple website on tablet, mobile and desktop"
     - image:
-        url: "/assets/images/designs/golfball/1.png"
+        url: "/assets/images/designs/golfball/2.jpg"
         alt: "Red Pineapple website on tablet, mobile and desktop"
     - image:
-        url: "/assets/images/designs/golfball/1.png"
+        url: "/assets/images/designs/golfball/3.jpg"
         alt: "Red Pineapple website on tablet, mobile and desktop"
     - image:
-        url: "/assets/images/designs/golfball/1.png"
+        url: "/assets/images/designs/golfball/4.jpg"
         alt: "Red Pineapple website on tablet, mobile and desktop"
     - image:
-        url: "/assets/images/designs/golfball/1.png"
+        url: "/assets/images/designs/golfball/5.jpg"
         alt: "Red Pineapple website on tablet, mobile and desktop"
     - image:
-        url: "/assets/images/designs/golfball/1.png"
+        url: "/assets/images/designs/golfball/6.jpg"
+        alt: "Red Pineapple website on tablet, mobile and desktop"
+    - image:
+        url: "/assets/images/designs/golfball/7.jpg"
+        alt: "Red Pineapple website on tablet, mobile and desktop"
+    - image:
+        url: "/assets/images/designs/golfball/8.jpg"
+        alt: "Red Pineapple website on tablet, mobile and desktop"
+    - image:
+        url: "/assets/images/designs/golfball/9.jpg"
+        alt: "Red Pineapple website on tablet, mobile and desktop"
+    - image:
+        url: "/assets/images/designs/golfball/10.jpg"
         alt: "Red Pineapple website on tablet, mobile and desktop"
 family: "ball"
 ---

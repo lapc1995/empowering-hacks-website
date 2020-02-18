@@ -43,30 +43,6 @@
 				</form>
 			</div>
 		</section>
-		<section class="intro">
-			<div class="container">
-				<h2>About me</h2>
-				<p>{{ site.description }}</p>
-			</div>
-		</section>
-		<section class="projects">
-			<div class="container">
-				<h2>Projects I have worked on.</h2>
-				<ul class="projects-list">
-					{% for item in site.designs reversed %}
-						<li>
-							<a href="{{ item.url | prepend: site.baseurl }}">
-								<div class="img-wrapper">
-									<img src="{{ item.images[0].image.url | prepend: site.baseurl }}" alt="{{ item.images[0].image.alt }}" />
-								</div>
-								<span class="h2">{{ item.description }}</span>
-								<h3>{{ item.title }}</h3>
-							</a>
-						</li>
-					{% endfor %}
-				</ul>
-			</div>
-		</section>
 	</main>
 	{% include footer.html %}
 	<script src="{{ "/assets/scripts/vendor/scrollreveal.min.js" | prepend: site.baseurl }}"></script>
@@ -226,11 +202,12 @@
    
 			reader.onload = (event) => {
 
-				document.getElementById(imgId).style.display = "block";
+				let imageThumbnail = document.getElementById(imgId);
+				imageThumbnail.src = reader.result;
+
+				imageThumbnail.style.display = "block";
 				document.getElementById(fileForUpload).style.display = "none";
 
-				var imageThumbnail = document.getElementById(imgId);
-				imageThumbnail.src = reader.result;
 			}
 
 			reader.onerror = (event) => {
@@ -253,6 +230,7 @@
 			let fileInput = document.createElement('input');
 			fileInput.id = `fileInput${imageN}`;
 			fileInput.classList.add("new-image-file-input");
+			fileInput.classList.add("choose-file-button");
 			fileInput.setAttribute("name", "imageUpload");
 			fileInput.setAttribute("type", "file");
 			fileInput.setAttribute("accept", "image/*");
@@ -265,8 +243,15 @@
 			imageDisplay.id = `image${imageN}`;
 			imageDisplay.src = "";
 			imageDisplay.setAttribute("name", "imageUpload");
-			imageDisplay.setAttribute("width", "150px");
-			imageDisplay.setAttribute("height", "150px");
+			//imageDisplay.setAttribute("width", "250px");
+			//imageDisplay.setAttribute("height", "100%");
+			//imageDisplay.setAttribute("max-width", "350px");
+			//imageDisplay.setAttribute("max-height", "250px");
+			//imageDisplay.setAttribute("background-size", "cover");
+			//imageDisplay.setAttribute("margin", "auto");
+			imageDisplay.classList.add("new-image-display");
+
+
 			imageDisplay.setAttribute("alt", "Image Placeholder");
 			imageDisplay.classList.add("new-image-display-hide");
 
@@ -277,16 +262,23 @@
 			altInput.id = `alt${imageN}`;
 			altInput.setAttribute("name", "altText");
 			altInput.setAttribute("type", "text");
-			altInput.setAttribute("placeholder", "Alt Text");
+			altInput.setAttribute("placeholder", "Add Image Description");
 			altInput.classList.add("new-image-alt-input");
 
+			let removeIcon = document.createElement('i');
+			removeIcon.classList.add("fas");
+			removeIcon.classList.add("fa-trash-alt");
+			removeIcon.style = "padding-right: 10px"
+
 			let removeButton = document.createElement('button');
-			removeButton.innerText = "Remove";
 			removeButton.setAttribute("data-id", imageN);
 			removeButton.setAttribute("type", "button");
 			removeButton.addEventListener("click", () => {
 				removeImage(removeButton.getAttribute('data-id'));
 			});
+			removeButton.classList.add("remove-button");
+			removeButton.appendChild(removeIcon);
+			removeButton.insertAdjacentText('beforeend', 'Remove');
 
 			gridContainer.appendChild(gridRow1);
 			gridRow1.appendChild(fileInput);
@@ -314,7 +306,6 @@
 
 			let fileInput = document.createElement('div');
 			fileInput.id = `fileInput${imageN}`;
-			//fileInput.classList.add("new-image-file-input");
 			fileInput.classList.add("existing-image-file");
 			fileInput.setAttribute("name", "imageUpload");
 			fileInput.setAttribute("value", url);
@@ -325,8 +316,6 @@
 			imageDisplay.id = `image${imageN}`;
 			imageDisplay.src = "{{ site.baseurl }}/" + url;
 			imageDisplay.setAttribute("name", "imageUpload");
-			imageDisplay.setAttribute("width", "150px");
-			imageDisplay.setAttribute("height", "150px");
 			imageDisplay.setAttribute("alt", "Image Placeholder");
 			imageDisplay.classList.add("new-image-display");
 
@@ -340,16 +329,22 @@
 			altInput.setAttribute("placeholder", "Alt Text");
 			altInput.setAttribute("disabled", "true");
 			altInput.value = alt;
-			//altInput.classList.add("new-image-alt-input");
 			altInput.classList.add("existing-image-alt-input");
 
+			let removeIcon = document.createElement('i');
+			removeIcon.classList.add("fas");
+			removeIcon.classList.add("fa-trash-alt");
+			removeIcon.style = "padding-right: 10px"
+
 			let removeButton = document.createElement('button');
-			removeButton.innerText = "Remove";
 			removeButton.setAttribute("data-id", imageN);
 			removeButton.setAttribute("type", "button");
 			removeButton.addEventListener("click", () => {
 				removeImage(removeButton.getAttribute('data-id'));
 			});
+			removeButton.classList.add("remove-button");
+			removeButton.appendChild(removeIcon);
+			removeButton.insertAdjacentText('beforeend', 'Remove');
 
 			gridContainer.appendChild(gridRow1);
 			gridRow1.appendChild(fileInput);

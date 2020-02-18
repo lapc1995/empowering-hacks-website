@@ -182,23 +182,35 @@ pre {
 	flex-wrap: wrap;
 	margin-top: 20px;
 	margin-bottom: 50px;
+	align-items: center;
+    justify-content: center;
 }
 
 .new-image-container, .new-file-container {
 	display: grid;
-	grid-template-columns: 150px;
+	grid-template-columns: 350px;
 	padding: 10px;
 }
 
 .new-image-row-1, .new-file-row-1 {
 	grid-row: 1;
-	width: 150px;
-	height: 150px;
+	width: 350px;
+	height: 250px;
 }
+
+
 
 .new-image-file-input, .new-file-input {
 	width: 100%;
 	height: 100%;
+}
+
+
+.new-image-display {
+	max-width:350px;
+	max-height:250px; 
+	background-size: cover;
+	margin: auto;
 }
 
 .new-image-display-hide {
@@ -207,11 +219,13 @@ pre {
 
 .new-image-row-2, .new-file-row-2  {
 	grid-row: 2;
-	width: 150px;
+	max-width: 350px;
+	width: 100%;
+	text-align: center;
 }
 
-.new-image-alt-input, .new-file-size-input {
-	width: 150px;
+.new-image-alt-input, .new-file-size-input, .existing-image-alt-input {
+	width: 97.4%;
 }
 
 .header-buttons {
@@ -393,3 +407,147 @@ pre {
 }
 
 
+/* Slideshow container */
+.slideshow-container {
+	max-width: 700px;
+	position: relative;
+	margin: auto;
+  }
+  
+/* Next & previous buttons */
+.prev, .next {
+	cursor: pointer;
+	position: absolute;
+	top: 50%;
+	width: auto;
+	padding: 16px;
+	margin-top: -22px;
+	color: white;
+	font-weight: bold;
+	font-size: 32px;
+	transition: 0.6s ease;
+	border-radius: 0 3px 3px 0;
+	user-select: none;
+	background-color: rgba(0,0,0,0.3);
+}
+
+  /* Position the "next button" to the right */
+.next {
+	right: 0;
+	border-radius: 3px 0 0 3px;
+}
+  
+/* On hover, add a black background color with a little bit see-through */
+.prev:hover, .next:hover {
+	background-color: rgba(0,0,0,0.8);
+}
+
+.numbertext {
+	position: absolute;
+    left: 20px;
+    top: 10px;
+    color: #ffffff;
+    opacity: 1;
+    background: dimgrey;
+    padding: 5px;
+	border-radius: 10px;
+	opacity: 0.8;
+}
+
+.remove-button {
+	color: white;
+	border: none;
+	background: $color-site-yellow;
+	height: 60px;
+	width: 100%;
+	border-bottom-style: solid;
+	border-color: $color-site-dark-yellow;
+	border-width: 5px;
+	border-radius: 50px;
+	font-size: 14px;
+	font-weight: 600;
+	outline: none;
+    margin-top: 5px;
+    max-width: 150px
+}
+
+.remove-button:hover {
+	cursor: pointer;
+}
+
+#addImageButton {
+	border-radius: 25px;
+    background: $color-site-green;
+    border-bottom-style: solid;
+    border-bottom-width: 5px;
+    border-bottom-color: $color-site-dark-green;
+    color: white;
+	font-size: 25px;
+	max-width: 350px;
+    max-height: 250px;
+	width: 100%;
+	height: 250px;
+	margin-bottom: 93px;
+	outline: none;
+}
+
+#addImageButton:hover {
+	cursor: pointer;
+}
+
+#addImageButton:active {
+	border-bottom-color: $color-site-dark-green;
+}
+
+.choose-file-button {
+	//border-radius: 25px;
+    background: $color-site-blue;
+    color: white;
+	font-size: 25px;
+	max-width: 350px;
+    max-height: 250px;
+	width: 100%;
+	height: 250px;
+	margin-bottom: 93px;
+	outline: none;
+}
+
+.choose-file-button:hover {
+	cursor: pointer;
+}
+
+.choose-file-button:active {
+	border-bottom-color: $color-site-dark-blue;
+}
+
+.choose-file-button::-webkit-file-upload-button {
+	visibility: hidden;
+}
+
+.choose-file-button::before {
+	content: 'Select Image';
+	display: inline-block;
+	background: linear-gradient(top, #f9f9f9, #e3e3e3);
+	border: 1px solid #999;
+	border-radius: 3px;
+	padding: 5px 8px;
+	outline: none;
+	white-space: nowrap;
+	-webkit-user-select: none;
+	cursor: pointer;
+	text-shadow: 1px 1px #fff;
+	font-weight: 700;
+	font-size: 10pt;
+  }
+
+  
+  .choose-file-button:hover::before {
+	border-color: black;
+  }
+  .choose-file-button:active::before {
+	background: -webkit-linear-gradient(top, #e3e3e3, #f9f9f9);
+  }
+
+  .choose-file-button + label {
+	  color: indianred;
+  }
